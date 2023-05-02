@@ -1,6 +1,6 @@
 package com.training.student.util;
 
-import com.training.student.model.Student;
+import com.training.student.entity.Student;
 
 import java.util.ArrayList;
 import java.util.List;

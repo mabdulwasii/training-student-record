@@ -1,4 +1,4 @@
-package com.training.student.model;
+package com.training.student.entity;
 
 public class Student {
     private int id;
