@@ -1,17 +1,23 @@
 package com.training.student.controller;
 
 import com.training.student.entity.Student;
+import com.training.student.exception.ErrorResponse;
 import com.training.student.service.StudentService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import static com.training.student.exception.ErrorResponse.buildErrorResponse;
+import static com.training.student.util.Validation.validateCreateStudentRequest;
+import static com.training.student.util.Validation.validateUpdateStudentRequest;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 @RestController
+@CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:8080", "http://127.0.0.1:3000"}, methods = RequestMethod.GET)
 @RequestMapping("/api/students")
 public class StudentController {
 
@@ -36,9 +42,11 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable Integer id) {
+    public ResponseEntity<?> getStudent(@PathVariable Integer id) {
         if (id < 1) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(
+                    buildErrorResponse("Id cannot be less than 1", BAD_REQUEST)
+            );
         }
 
         Student student = service.getStudent(id);
@@ -50,9 +58,11 @@ public class StudentController {
     }
 
     @GetMapping("/v2/{id}")
-    public ResponseEntity<Student> getStudentOptional(@PathVariable Integer id) {
+    public ResponseEntity<?> getStudentOptional(@PathVariable Integer id) {
         if (id < 1) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(
+                    buildErrorResponse("Id cannot be less than 1", BAD_REQUEST)
+            );
         }
 
         Optional<Student> studentOptional = service.getStudentOptional(id);
@@ -67,4 +77,55 @@ public class StudentController {
                 .map(student -> ResponseEntity.ok().body(student))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PostMapping
+    public ResponseEntity<?> createStudent(@RequestBody Student student) throws URISyntaxException {
+        if (student.getId() != null) {
+            return validateCreateStudentRequest(student);
+        }
+        Student createdStudent = service.createStudent(student);
+        return ResponseEntity.created(new URI("/api/students/v2/" + createdStudent.getId())).body(createdStudent);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateStudent(@RequestBody Student student) throws URISyntaxException {
+        if (student.getId() == null) {
+            return validateUpdateStudentRequest(student);
+        }
+        Optional<Student> updatedStudent = service.updateStudent(student);
+
+        if (updatedStudent.isPresent()) {
+            return ResponseEntity.ok(updatedStudent);
+        } else {
+            return ResponseEntity.badRequest().body(
+                    buildErrorResponse("Student with Id " + student.getId() + " does not exist", BAD_REQUEST)
+            );
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteStudent(@PathVariable Integer id) {
+        service.deleteStudent(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /** Sample json
+
+    {
+    "name" : "David",
+    "age" : 9,
+    "addresses" : [
+        {
+            "address" : "2 ade road",
+            "city": "ilorin",
+            "state": "Kwara"
+        },
+          {
+            "address" : "4 Sokoto road",
+            "city": "ilorin",
+            "state": "Kwara"
+        }
+    ]
+}*/
+
 }

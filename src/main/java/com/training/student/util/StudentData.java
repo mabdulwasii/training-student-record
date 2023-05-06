@@ -7,11 +7,17 @@ import java.util.List;
 
 public class StudentData {
 
-    public static List<Student> populate() {
-        ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student(1, 12, "Ade"));
-        students.add(new Student(2, 4, "Ola"));
-        students.add(new Student(3, 20, "Wale"));
-        return students;
+    private StudentData() {
     }
+
+    public static List<Student> STUDENT_LIST = new ArrayList<>();
+
+
+    static {
+        STUDENT_LIST.add(new Student(1, 12, "Ade"));
+        STUDENT_LIST.add(new Student(2, 4, "Ola"));
+        STUDENT_LIST.add(new Student(3, 20, "Wale"));
+    }
+
+
 }
