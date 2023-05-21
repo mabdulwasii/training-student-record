@@ -1,10 +1,21 @@
 package com.training.student.entity;
 
+import javax.persistence.*;
+
+@Entity
 public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column( nullable = false)
     private Integer id;
     private Integer age;
     private String name;
     private boolean isDeleted = false;
+
+    public Student() {
+
+    }
 
     public void delete() {
         this.isDeleted = true;

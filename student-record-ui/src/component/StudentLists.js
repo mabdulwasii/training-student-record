@@ -7,7 +7,7 @@ const StudentLists = ({selectStudent}) => {
 
     const fetchStudents = async () => {
         const response = await fetch(
-            "http://127.0.0.1:8080/api/students",
+            "http://127.0.0.1:8080/api/v2/students",
             {
                 method: 'GET'
             }

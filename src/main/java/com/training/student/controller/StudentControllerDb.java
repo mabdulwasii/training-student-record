@@ -2,6 +2,7 @@ package com.training.student.controller;
 
 import com.training.student.entity.Student;
 import com.training.student.service.StudentService;
+import com.training.student.service.StudentServiceDb;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:8080", "http://127.0.0.1:3000"}, methods = RequestMethod.GET)
-@RequestMapping("/api/students")
-public class StudentController {
+@RequestMapping("/api/v2/students")
+public class StudentControllerDb {
 
-    private static final Log logger = LogFactory.getLog(StudentController.class);
+    private static final Log logger = LogFactory.getLog(StudentControllerDb.class);
 
     //dependency injection
     //1. Annotation @Autowired
@@ -30,9 +31,9 @@ public class StudentController {
     //    private StudentService service;
 
     //2. Constructor Injection
-    private final StudentService service;
+    private final StudentServiceDb service;
 
-    public StudentController(StudentService service) {
+    public StudentControllerDb(StudentServiceDb service) {
         this.service = service;
     }
 

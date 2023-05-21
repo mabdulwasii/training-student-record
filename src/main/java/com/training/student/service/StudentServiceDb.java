@@ -12,12 +12,16 @@ import java.util.stream.Collectors;
 import static com.training.student.util.StudentData.STUDENT_LIST;
 
 @Service
-public class StudentService {
+public class StudentServiceDb {
+
+    private final StudentRepository studentRepository;
+
+    public StudentServiceDb(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     public List<Student> getAllStudents() {
-       return STUDENT_LIST.stream()
-               .filter(student -> !student.isDeleted())
-               .collect(Collectors.toList());
+        return studentRepository.findAll();
     }
 
     public Student getStudent(@PathVariable Integer id) {
@@ -39,9 +43,7 @@ public class StudentService {
     }
 
     public Student createStudent(Student student) {
-        student.setId(STUDENT_LIST.size() + 1);
-        STUDENT_LIST.add(student);
-        return student;
+        return studentRepository.save(student);
     }
 
 
