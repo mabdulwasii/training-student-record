@@ -1,8 +1,9 @@
 package com.training.student.controller;
 
 import com.training.student.entity.Student;
-import com.training.student.exception.ErrorResponse;
 import com.training.student.service.StudentService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000", "http://127.0.0.1:8080", "http://127.0.0.1:3000"}, methods = RequestMethod.GET)
 @RequestMapping("/api/students")
 public class StudentController {
+
+    private static final Log logger = LogFactory.getLog(StudentController.class);
 
     //dependency injection
     //1. Annotation @Autowired
@@ -43,6 +46,7 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getStudent(@PathVariable Integer id) {
+        logger.info("Request to get a student record with id : " + id);
         if (id < 1) {
             return ResponseEntity.badRequest().body(
                     buildErrorResponse("Id cannot be less than 1", BAD_REQUEST)
@@ -59,6 +63,7 @@ public class StudentController {
 
     @GetMapping("/v2/{id}")
     public ResponseEntity<?> getStudentOptional(@PathVariable Integer id) {
+        logger.info("Request to get a student record v2 with id : " + id);
         if (id < 1) {
             return ResponseEntity.badRequest().body(
                     buildErrorResponse("Id cannot be less than 1", BAD_REQUEST)

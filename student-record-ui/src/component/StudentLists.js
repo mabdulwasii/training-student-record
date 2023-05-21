@@ -21,8 +21,9 @@ const StudentLists = ({selectStudent}) => {
         fetchStudents().catch(reason => console.log(reason))
     }, []);
 
+
     return (
-        <Container className="row">
+        <Container>
             <div className="row mb-2">
                 <h5 className="themeFontColor text-center">
                     List students
